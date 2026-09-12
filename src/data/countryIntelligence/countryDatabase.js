@@ -101,7 +101,7 @@ export const COUNTRY_DATABASE = {
     gdpRank: 18,
     gdpPerCapitaUSD: 10550,
     economicRankDesc: '18th largest, G20 member',
-    currency: { code: 'TRY', name: { en: 'Turkish Lira', fa: 'لیر ترکیه' }, symbol: '₺', vsUSD: 32.5, lastUpdated: '2024' },
+    currency: { code: 'TRY', name: { en: 'Turkish Lira', fa: 'لیر ترکیه' }, symbol: '₺', vsUSD: 48.6, lastUpdated: '2026-09-12 REAL from open.er-api.com' },
     internetUsersPercent: 82.6,
     internetFilteringLevel: 6,
     internetSpeedAvgMbps: { download: 45.2, upload: 18.5, mobile: 38.7 },
