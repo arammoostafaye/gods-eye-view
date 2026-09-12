@@ -8,6 +8,8 @@ import * as Cesium from 'cesium';
 import { CountryInfoPanel } from '../ui/countryInfoPanel.js';
 import { CyberThreatMap } from '../ui/cyberThreatMap.js';
 import { createCountryIntelToolbar } from '../ui/countryIntelToolbar.js';
+import { createLiveStatsBar } from '../ui/liveStatsBar.js';
+import { createGitHubPagesBanner } from '../ui/githubPagesBanner.js';
 import { GlobalThreatDashboard } from '../ui/globalThreatDashboard.js';
 import { getCountryByCode, getCountryByLatLon } from './countryIntelligence/countryDatabase.js';
 import { internetOutageMonitor } from './cyberIntelligence/internetOutage.js';
@@ -21,6 +23,7 @@ let _countryPanel = null;
 let _threatMap = null;
 let _toolbar = null;
 let _dashboard = null;
+let _liveStatsBar = null;
 let _clickHandler = null;
 let _enabled = false;
 
@@ -123,6 +126,8 @@ const countryIntelligenceLayer = {
     _threatMap = new CyberThreatMap(viewer);
     _dashboard = new GlobalThreatDashboard();
     _toolbar = createCountryIntelToolbar(viewer);
+    _liveStatsBar = createLiveStatsBar();
+    createGitHubPagesBanner();
     
     // Add dashboard handler to toolbar after creation
     setTimeout(() => {
