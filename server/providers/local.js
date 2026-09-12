@@ -4,6 +4,7 @@ import { firmsProxy } from './firms.js';
 import { gbfsProxy } from './gbfs.js';
 import { celestrakProxy, rocketLaunchesProxy } from './space.js';
 import { cyberIntelProxy } from './cyberIntel.js';
+import { telegramPricesProxy } from './telegramPrices.js';
 export { LL2_CACHE_TTL_MS, launchLibraryRequestHeaders } from './space.js';
 /**
  * Local Node provider middleware for God's Eye View.
@@ -4669,5 +4670,6 @@ export function localProviderPlugins() {
       googlePlacesContextProxy(),
       keySetupEndpoint(),
       cyberIntelProxy(),
+      telegramPricesProxy(),
   ];
 }
