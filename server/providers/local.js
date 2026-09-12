@@ -4668,8 +4668,8 @@ export function localProviderPlugins() {
       trackBackfillProxies(),
       openAiRealtimeProxy(),
       googlePlacesContextProxy(),
-      keySetupEndpoint(),
       cyberIntelProxy(),
       telegramPricesProxy(),
+      keySetupEndpoint(),
   ];
 }
