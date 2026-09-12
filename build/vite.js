@@ -8,7 +8,14 @@ export function createBrowserViteConfig({
   host = 'localhost',
   port = 4173,
 } = {}) {
+  // For GitHub Pages deployed under /gods-eye-view/, use that base path
+  // VITE_BASE env can override, or auto-detect GitHub Actions
+  const base =
+    process.env.VITE_BASE ||
+    (process.env.GITHUB_ACTIONS ? '/gods-eye-view/' : '/');
+
   return {
+    base,
     plugins: [cesium(), ...plugins],
     server: {
       host: host || 'localhost',
@@ -20,7 +27,6 @@ export function createBrowserViteConfig({
       fs: {
         deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/ENVIRONMENT'],
       },
-      // These headers protect the document containing Provider Settings.
       headers: {
         'X-Frame-Options': 'DENY',
         'Content-Security-Policy': "frame-ancestors 'none'",
