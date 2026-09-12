@@ -1,124 +1,115 @@
 /**
  * Public API fallback for GitHub Pages (no backend proxy)
- * Tries direct public APIs with CORS support or via CORS proxies
+ * REAL DATA via Cloudflare Worker + direct APIs + CORS proxies
+ * Falls back to mock if all real sources fail
  */
 
-// CORS proxies that allow GET to public APIs
+import { WORKER_URL, REAL_APIS } from '../config/proxy.js';
+
+// Updated CORS proxies - corsproxy.io now requires key, so use alternatives
 const CORS_PROXIES = [
-  (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
+  // Worker proxy
+  (url) => `${WORKER_URL}/api/proxy?url=${encodeURIComponent(url)}`,
+  // Direct worker endpoints
+  (url) => {
+    if (url.includes('adsb.lol/v2/mil')) return `${WORKER_URL}/api/adsblol/mil`;
+    if (url.includes('/lat/') && url.includes('/lon/')) {
+      const latMatch = url.match(/lat\/([-\d.]+)/);
+      const lonMatch = url.match(/lon\/([-\d.]+)/);
+      const distMatch = url.match(/dist\/(\d+)/);
+      const lat = latMatch ? latMatch[1] : '35';
+      const lon = lonMatch ? lonMatch[1] : '45';
+      const dist = distMatch ? distMatch[1] : '250';
+      return `${WORKER_URL}/api/adsblol/lat/${lat}/lon/${lon}/dist/${dist}`;
+    }
+    return `${WORKER_URL}/api/opensky`;
+  },
 ];
 
-// Public flight APIs - airplanes.live supports CORS (*)
-const PUBLIC_APIS = {
-  // airplanes.live - CORS enabled, same format as adsb.lol (ac array)
-  military: 'https://api.airplanes.live/v2/mil',
-  // For general flights, use point query around camera
-  point: (lat, lon, dist = 250) => `https://api.airplanes.live/v2/point/${lat.toFixed(4)}/${lon.toFixed(4)}/${dist}`,
-  // Fallback to adsb.lol via proxy
-  adsbLolMil: 'https://api.adsb.lol/v2/mil',
-  adsbLolPoint: (lat, lon, dist = 250) => `https://api.adsb.lol/v2/lat/${lat.toFixed(4)}/lon/${lon.toFixed(4)}/dist/${dist}`,
+export const PUBLIC_APIS = {
+  military: REAL_APIS.adsbMil,
+  point: REAL_APIS.adsbPoint,
+  adsbLolMil: REAL_APIS.adsbMil,
+  adsbLolPoint: REAL_APIS.adsbPoint,
+  airplanesMil: REAL_APIS.airplanesMil,
+  airplanesPoint: REAL_APIS.airplanesPoint,
 };
 
-function isGitHubPages() {
+export function isGitHubPages() {
   return typeof window !== 'undefined' && window.location.hostname.includes('github.io');
 }
 
-async function fetchWithCorsFallback(url, options = {}) {
+async function fetchWithTimeout(url, options = {}) {
   const { signal, timeout = 8000 } = options;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
   
-  // Try direct fetch first
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-    const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
-    
-    const res = await fetch(url, { signal: combinedSignal });
+    const res = await fetch(url, {
+      signal: combinedSignal,
+      headers: { 'Accept': 'application/json', ...options.headers },
+    });
     clearTimeout(timeoutId);
-    if (res.ok) return res;
-    // If 404, try CORS proxies (GitHub Pages case)
-    if (res.status === 404 && isGitHubPages()) {
-      throw new Error(`HTTP ${res.status}`);
-    }
     return res;
-  } catch (err) {
-    // On GitHub Pages, try CORS proxies and alternative APIs
-    if (!isGitHubPages()) throw err;
-    
-    console.log(`[Fallback] Direct fetch failed for ${url}, trying public APIs...`);
-    
-    // Try public APIs directly
-    for (const proxy of CORS_PROXIES) {
-      try {
-        const proxiedUrl = proxy(url);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
-        const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
-        
-        const res = await fetch(proxiedUrl, { signal: combinedSignal });
-        clearTimeout(timeoutId);
-        if (res.ok) {
-          console.log(`[Fallback] Success via proxy: ${proxiedUrl.substring(0, 60)}...`);
-          return res;
-        }
-      } catch (e) {
-        // Continue to next proxy
-        continue;
-      }
-    }
-    
-    throw err;
+  } catch (e) {
+    clearTimeout(timeoutId);
+    throw e;
   }
 }
 
 export async function fetchMilitaryWithFallback(primaryUrl, options = {}) {
   const { signal } = options;
   
-  // Try primary (proxy) first
+  // Try primary (local proxy) first - works in Docker/dev
   try {
-    const res = await fetch(primaryUrl, { signal, headers: { 'Accept': 'application/json' } });
-    if (res.ok) return res;
-    if (res.status !== 404) return res; // Return non-404 errors as-is
+    const res = await fetchWithTimeout(primaryUrl, { signal, timeout: 5000 });
+    if (res.ok) {
+      console.log('[Military] Success via primary:', primaryUrl);
+      return res;
+    }
+    if (res.status !== 404 && res.status !== 403) return res;
     throw new Error(`HTTP ${res.status}`);
   } catch (err) {
     if (!isGitHubPages()) throw err;
     
-    console.log('[Fallback] Military proxy 404, trying public APIs...');
+    console.log('[Military] Primary failed, trying REAL APIs for GitHub Pages...');
     
-    // Try airplanes.live first (CORS enabled)
-    const publicUrls = [
-      PUBLIC_APIS.military,
-      PUBLIC_APIS.adsbLolMil,
+    // On GitHub Pages, try REAL APIs
+    const realUrls = [
+      // Try worker first if configured
+      ...(WORKER_URL && !WORKER_URL.includes('yourname') ? [
+        `${WORKER_URL}/api/adsblol/mil`,
+        `${WORKER_URL}/api/opensky`,
+      ] : []),
+      // Direct real APIs (adsb.lol works but needs CORS proxy in browser)
+      REAL_APIS.adsbMil,
+      REAL_APIS.airplanesMil,
     ];
     
-    for (const publicUrl of publicUrls) {
-      // Try direct
+    // Try direct real APIs
+    for (const realUrl of realUrls) {
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
-        
-        const res = await fetch(publicUrl, { signal: combinedSignal, headers: { 'Accept': 'application/json' } });
-        clearTimeout(timeoutId);
+        const res = await fetchWithTimeout(realUrl, { signal, timeout: 6000 });
         if (res.ok) {
-          console.log(`[Fallback] Military success via ${publicUrl}`);
+          console.log(`[Military] REAL success via ${realUrl}`);
           return res;
         }
       } catch (e) {
-        // Try via CORS proxy
+        // Try via CORS proxies
         for (const proxy of CORS_PROXIES) {
           try {
-            const proxiedUrl = proxy(publicUrl);
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
-            
-            const res = await fetch(proxiedUrl, { signal: combinedSignal });
-            clearTimeout(timeoutId);
+            const proxiedUrl = proxy(realUrl);
+            const res = await fetchWithTimeout(proxiedUrl, { signal, timeout: 6000 });
             if (res.ok) {
-              console.log(`[Fallback] Military success via proxy for ${publicUrl}`);
-              return res;
+              // Check if response is actually JSON and not error page
+              const text = await res.clone().text();
+              if (text.includes('"ac"') || text.includes('"aircraft"') || text.startsWith('{')) {
+                console.log(`[Military] REAL success via proxy for ${realUrl}`);
+                return res;
+              }
             }
           } catch (e2) {
             continue;
@@ -127,6 +118,7 @@ export async function fetchMilitaryWithFallback(primaryUrl, options = {}) {
       }
     }
     
+    console.log('[Military] All REAL APIs failed, will use mock fallback in layer');
     throw err;
   }
 }
@@ -134,79 +126,79 @@ export async function fetchMilitaryWithFallback(primaryUrl, options = {}) {
 export async function fetchFlightsWithFallback(primaryUrl, viewer, options = {}) {
   const { signal } = options;
   
-  // Try primary first
+  // Try primary first (Docker/dev)
   try {
-    const res = await fetch(primaryUrl, { signal, headers: { 'Accept': 'application/json' } });
-    if (res.ok) return { response: res, source: 'OpenSky Network', isAdsbLol: false };
-    if (res.status !== 404) return { response: res, source: 'OpenSky Network', isAdsbLol: false };
+    const res = await fetchWithTimeout(primaryUrl, { signal, timeout: 5000 });
+    if (res.ok) {
+      return { response: res, source: 'OpenSky Network', isAdsbLol: false };
+    }
+    if (res.status !== 404 && res.status !== 403) {
+      return { response: res, source: 'OpenSky Network', isAdsbLol: false };
+    }
     throw new Error(`HTTP ${res.status}`);
   } catch (err) {
     if (!isGitHubPages()) throw err;
     
-    console.log('[Fallback] OpenSky proxy 404, trying public flight APIs...');
+    console.log('[Flights] Primary failed, trying REAL APIs for GitHub Pages...');
     
-    // Get viewer position for point query
-    let lat = 0, lon = 0;
+    // Get viewer position
+    let lat = 35.0, lon = 45.0;
     try {
       const carto = viewer?.camera?.positionCartographic;
       if (carto) {
-        // cartographic latitude/longitude are in radians
         const latRad = carto.latitude;
         const lonRad = carto.longitude;
         if (typeof latRad === 'number' && typeof lonRad === 'number') {
           lat = latRad * 180 / Math.PI;
           lon = lonRad * 180 / Math.PI;
-        } else if (carto.latitude && carto.longitude) {
-          // Might already be degrees in some contexts
-          lat = Number(carto.latitude);
-          lon = Number(carto.longitude);
         }
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
-          lat = 0; lon = 0;
+          lat = 35.0; lon = 45.0;
         }
       }
     } catch {}
     
-    // If no viewer position, use 0,0 with large dist, or use Kurdistan/Iran area as default
-    if (lat === 0 && lon === 0) {
-      lat = 35.0; // Middle East default
-      lon = 45.0;
-    }
-    
-    const publicUrls = [
-      PUBLIC_APIS.point(lat, lon, 250),
-      `https://api.airplanes.live/v2/point/${lat.toFixed(2)}/${lon.toFixed(2)}/250`,
-      PUBLIC_APIS.adsbLolPoint(lat, lon, 250),
-      PUBLIC_APIS.military, // At least show military if all else fails
+    const realUrls = [
+      ...(WORKER_URL && !WORKER_URL.includes('yourname') ? [
+        `${WORKER_URL}/api/adsblol/lat/${lat}/lon/${lon}/dist/250`,
+        `${WORKER_URL}/api/opensky?lat=${lat}&lon=${lon}`,
+      ] : []),
+      REAL_APIS.adsbPoint(lat, lon, 250),
+      REAL_APIS.airplanesPoint(lat, lon, 250),
+      REAL_APIS.adsbMil,
     ];
     
-    for (const publicUrl of publicUrls) {
-      // Try direct
+    for (const realUrl of realUrls) {
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
-        
-        const res = await fetch(publicUrl, { signal: combinedSignal, headers: { 'Accept': 'application/json' } });
-        clearTimeout(timeoutId);
+        const res = await fetchWithTimeout(realUrl, { signal, timeout: 6000 });
         if (res.ok) {
-          console.log(`[Fallback] Flights success via ${publicUrl}`);
-          return { response: res, source: publicUrl.includes('airplanes.live') ? 'airplanes.live' : 'adsb.lol', isAdsbLol: true };
+          const text = await res.clone().text();
+          if (text.includes('"ac"') || text.includes('"states"') || text.startsWith('{')) {
+            console.log(`[Flights] REAL success via ${realUrl}`);
+            const isAdsbLol = text.includes('"ac"');
+            return { 
+              response: res, 
+              source: realUrl.includes('airplanes.live') ? 'airplanes.live REAL' : realUrl.includes('adsb.lol') ? 'adsb.lol REAL' : 'worker REAL', 
+              isAdsbLol 
+            };
+          }
         }
       } catch (e) {
-        // Try via CORS proxy
+        // Try via proxies
         for (const proxy of CORS_PROXIES) {
           try {
-            const proxiedUrl = proxy(publicUrl);
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const combinedSignal = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
-            
-            const res = await fetch(proxiedUrl, { signal: combinedSignal });
-            clearTimeout(timeoutId);
+            const proxiedUrl = proxy(realUrl);
+            const res = await fetchWithTimeout(proxiedUrl, { signal, timeout: 6000 });
             if (res.ok) {
-              console.log(`[Fallback] Flights success via proxy for ${publicUrl}`);
-              return { response: res, source: publicUrl.includes('airplanes.live') ? 'airplanes.live' : 'adsb.lol', isAdsbLol: true };
+              const text = await res.clone().text();
+              if (text.includes('"ac"') || text.includes('"states"')) {
+                console.log(`[Flights] REAL success via proxy for ${realUrl}`);
+                return {
+                  response: res,
+                  source: 'adsb.lol REAL via proxy',
+                  isAdsbLol: true,
+                };
+              }
             }
           } catch (e2) {
             continue;
@@ -215,8 +207,9 @@ export async function fetchFlightsWithFallback(primaryUrl, viewer, options = {})
       }
     }
     
+    console.log('[Flights] All REAL APIs failed, will use mock');
     throw err;
   }
 }
 
-export { isGitHubPages, PUBLIC_APIS };
+export { REAL_APIS };
