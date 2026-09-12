@@ -1,12 +1,9 @@
 name = "gods-eye-view-proxy"
 main = "index.js"
 compatibility_date = "2024-01-01"
+workers_dev = true
 
 [vars]
 # Add your API keys here if you have them
 # OPENSKY_CLIENT_ID = ""
 # OPENSKY_CLIENT_SECRET = ""
-
-[[routes]]
-pattern = "api.gods-eye-view.workers.dev/*"
-zone_name = ""

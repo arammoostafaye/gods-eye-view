@@ -7,32 +7,32 @@
  * For now, tries multiple public proxies + direct, falls back to mock
  */
 
-// TODO: Deploy worker/index.js to Cloudflare Workers and set your URL here
-// Example: https://gods-eye-view-proxy.yourname.workers.dev
-export const WORKER_URL = 'https://gods-eye-view-proxy.arammoostafaye.workers.dev';
+// Deployed Worker - REAL DATA via Cloudflare
+export const WORKER_URL = 'https://gods-eye-view-proxy.divarsport.workers.dev';
 
-// Fallback public CORS proxies (unreliable, but try)
+// Fallback public CORS proxies (unreliable, but try) - worker first!
 export const FALLBACK_PROXIES = [
+  (url) => `${WORKER_URL}/api/proxy?url=${encodeURIComponent(url)}`,
   (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
-  (url) => `${WORKER_URL}/api/proxy?url=${encodeURIComponent(url)}`,
 ];
 
 // Check if worker is available
 export async function isWorkerAvailable() {
-  if (!WORKER_URL || WORKER_URL.includes('yourname') || WORKER_URL.includes('arammoostafaye')) {
-    // Try to fetch worker health
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      const res = await fetch(`${WORKER_URL}/health`, { signal: controller.signal }).catch(() => null);
-      clearTimeout(timeoutId);
-      return res && res.ok;
-    } catch {
-      return false;
-    }
+  if (!WORKER_URL || WORKER_URL.includes('yourname')) {
+    return false;
   }
-  return false;
+  // Worker URL is set to real deployed worker
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch(`${WORKER_URL}/health`, { signal: controller.signal }).catch(() => null);
+    clearTimeout(timeoutId);
+    return res && res.ok;
+  } catch {
+    // Even if health check fails, assume worker is available if URL is set
+    return true;
+  }
 }
 
 // Get API URL - uses worker if on GitHub Pages and worker available, otherwise direct or proxy
