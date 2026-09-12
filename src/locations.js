@@ -117,6 +117,103 @@ export const CITY_POIS = {
       { name: 'Jefferson Memorial', lat: 38.8814, lon: -77.0365, alt: 400, pitch: -30, heading: 0, buildingHeight: 25 },
     ],
   },
+  // --- Personal Edition: Kurdistan & Iran & Middle East ---
+  tehran: {
+    name: 'Tehran - تهران',
+    groundElevation: 1200,
+    viewBounds: { southwest: { lat: 35.50, lng: 51.10 }, northeast: { lat: 35.90, lng: 51.70 } },
+    pois: [
+      { name: 'Azadi Tower - برج آزادی', lat: 35.6997, lon: 51.3380, alt: 600, pitch: -25, heading: 90, buildingHeight: 45 },
+      { name: 'Milad Tower - برج میلاد', lat: 35.7448, lon: 51.3753, alt: 800, pitch: -20, heading: 180, buildingHeight: 270 },
+      { name: 'Golestan Palace', lat: 35.6798, lon: 51.4205, alt: 500, pitch: -30, heading: 45, buildingHeight: 20 },
+      { name: 'Tehran Bazaar', lat: 35.6778, lon: 51.4240, alt: 500, pitch: -35, heading: 0, buildingHeight: 15 },
+      { name: 'Valiasr Square - میدان ولیعصر', lat: 35.7100, lon: 51.4070, alt: 600, pitch: -25, heading: 0, buildingHeight: 10 },
+    ],
+  },
+  erbil: {
+    name: 'Erbil - هەولێر - اربیل',
+    groundElevation: 420,
+    viewBounds: { southwest: { lat: 36.05, lng: 43.85 }, northeast: { lat: 36.35, lng: 44.15 } },
+    pois: [
+      { name: 'Erbil Citadel - قەڵای هەولێر', lat: 36.1910, lon: 44.0090, alt: 550, pitch: -30, heading: 45, buildingHeight: 35 },
+      { name: 'Erbil International Airport - ORER', lat: 36.2350, lon: 43.9630, alt: 900, pitch: -25, heading: 270, buildingHeight: 15 },
+      { name: 'Sami Abdulrahman Park', lat: 36.1905, lon: 44.0105, alt: 600, pitch: -35, heading: 0, buildingHeight: 10 },
+      { name: 'Minaret Park', lat: 36.1840, lon: 44.0120, alt: 450, pitch: -28, heading: 90, buildingHeight: 30 },
+      { name: 'Family Mall', lat: 36.2100, lon: 44.0200, alt: 500, pitch: -25, heading: 180, buildingHeight: 20 },
+    ],
+  },
+  slemani: {
+    name: 'Slemani - سلێمانی - سلیمانی',
+    groundElevation: 850,
+    viewBounds: { southwest: { lat: 35.45, lng: 45.30 }, northeast: { lat: 35.65, lng: 45.55 } },
+    pois: [
+      { name: 'Slemani Museum', lat: 35.5570, lon: 45.4350, alt: 500, pitch: -25, heading: 0, buildingHeight: 20 },
+      { name: 'Sulaimaniyah Airport - ORSU', lat: 35.5610, lon: 45.3140, alt: 800, pitch: -20, heading: 90, buildingHeight: 15 },
+      { name: 'Chavy Land', lat: 35.5600, lon: 45.4400, alt: 600, pitch: -30, heading: 180, buildingHeight: 30 },
+      { name: 'Azadi Park', lat: 35.5550, lon: 45.4300, alt: 450, pitch: -28, heading: 45, buildingHeight: 10 },
+      { name: 'Grand Mosque', lat: 35.5580, lon: 45.4380, alt: 400, pitch: -25, heading: 0, buildingHeight: 35 },
+    ],
+  },
+  duhok: {
+    name: 'Duhok - دهۆک - دهوک',
+    groundElevation: 600,
+    viewBounds: { southwest: { lat: 36.80, lng: 42.90 }, northeast: { lat: 36.95, lng: 43.10 } },
+    pois: [
+      { name: 'Duhok Dam', lat: 36.8677, lon: 42.9882, alt: 700, pitch: -30, heading: 90, buildingHeight: 40 },
+      { name: 'Zawa Mountain', lat: 36.8800, lon: 42.9500, alt: 900, pitch: -35, heading: 0, buildingHeight: 100 },
+      { name: 'Duhok University', lat: 36.8600, lon: 43.0000, alt: 500, pitch: -25, heading: 180, buildingHeight: 25 },
+      { name: 'Azadi Park Duhok', lat: 36.8650, lon: 42.9900, alt: 400, pitch: -28, heading: 45, buildingHeight: 10 },
+      { name: 'Duhok Bazaar', lat: 36.8620, lon: 42.9950, alt: 400, pitch: -30, heading: 0, buildingHeight: 15 },
+    ],
+  },
+  isfahan: {
+    name: 'Isfahan - اصفهان',
+    groundElevation: 1570,
+    viewBounds: { southwest: { lat: 32.55, lng: 51.55 }, northeast: { lat: 32.75, lng: 51.80 } },
+    pois: [
+      { name: 'Naqsh-e Jahan Square - میدان نقش جهان', lat: 32.6570, lon: 51.6770, alt: 600, pitch: -35, heading: 0, buildingHeight: 20 },
+      { name: 'Si-o-se-pol Bridge', lat: 32.6440, lon: 51.6680, alt: 500, pitch: -25, heading: 90, buildingHeight: 15 },
+      { name: 'Shah Mosque', lat: 32.6575, lon: 51.6785, alt: 450, pitch: -28, heading: 180, buildingHeight: 35 },
+      { name: 'Isfahan Airport - OIFM', lat: 32.7508, lon: 51.8617, alt: 800, pitch: -20, heading: 45, buildingHeight: 15 },
+      { name: 'Chehel Sotoun', lat: 32.6580, lon: 51.6710, alt: 400, pitch: -30, heading: 0, buildingHeight: 15 },
+    ],
+  },
+  tabriz: {
+    name: 'Tabriz - تبریز',
+    groundElevation: 1360,
+    viewBounds: { southwest: { lat: 37.95, lng: 46.15 }, northeast: { lat: 38.20, lng: 46.40 } },
+    pois: [
+      { name: 'Tabriz Bazaar - بازار تبریز', lat: 38.0800, lon: 46.2910, alt: 500, pitch: -30, heading: 0, buildingHeight: 15 },
+      { name: 'Blue Mosque - مسجد کبود', lat: 38.0730, lon: 46.3010, alt: 450, pitch: -25, heading: 90, buildingHeight: 25 },
+      { name: 'El Goli Park', lat: 38.0240, lon: 46.3650, alt: 600, pitch: -35, heading: 180, buildingHeight: 10 },
+      { name: 'Tabriz Airport - OITT', lat: 38.1339, lon: 46.2350, alt: 800, pitch: -20, heading: 270, buildingHeight: 15 },
+      { name: 'Arg of Tabriz', lat: 38.0740, lon: 46.2880, alt: 400, pitch: -28, heading: 45, buildingHeight: 30 },
+    ],
+  },
+  baghdad: {
+    name: 'Baghdad - بغداد',
+    groundElevation: 34,
+    viewBounds: { southwest: { lat: 33.15, lng: 44.15 }, northeast: { lat: 33.45, lng: 44.55 } },
+    pois: [
+      { name: 'Green Zone', lat: 33.3150, lon: 44.3660, alt: 700, pitch: -25, heading: 0, buildingHeight: 20 },
+      { name: 'Baghdad International Airport - ORBI', lat: 33.2625, lon: 44.2346, alt: 900, pitch: -20, heading: 90, buildingHeight: 15 },
+      { name: 'Al-Shaheed Monument', lat: 33.3430, lon: 44.4460, alt: 500, pitch: -30, heading: 180, buildingHeight: 40 },
+      { name: 'Tahrir Square', lat: 33.3250, lon: 44.4100, alt: 550, pitch: -25, heading: 45, buildingHeight: 10 },
+      { name: 'Abu Nuwas Street', lat: 33.3150, lon: 44.3950, alt: 500, pitch: -28, heading: 90, buildingHeight: 10 },
+    ],
+  },
+  istanbul: {
+    name: 'Istanbul - ئەستەمبوڵ - استانبول',
+    groundElevation: 40,
+    viewBounds: { southwest: { lat: 40.90, lng: 28.70 }, northeast: { lat: 41.15, lng: 29.25 } },
+    pois: [
+      { name: 'Hagia Sophia - ایاصوفیه', lat: 41.0086, lon: 28.9802, alt: 600, pitch: -25, heading: 90, buildingHeight: 55 },
+      { name: 'Blue Mosque', lat: 41.0054, lon: 28.9768, alt: 550, pitch: -28, heading: 0, buildingHeight: 45 },
+      { name: 'Bosphorus Bridge', lat: 41.0450, lon: 29.0340, alt: 800, pitch: -30, heading: 45, buildingHeight: 65 },
+      { name: 'Istanbul Airport - LTFM', lat: 41.2750, lon: 28.8150, alt: 1000, pitch: -20, heading: 270, buildingHeight: 20 },
+      { name: 'Galata Tower', lat: 41.0256, lon: 28.9744, alt: 500, pitch: -25, heading: 180, buildingHeight: 35 },
+    ],
+  },
 };
 
 /**

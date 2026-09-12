@@ -252,6 +252,25 @@ const CAMERA_SEEDS = [
 
   { id: 'austin-congress-s', cityId: 'austin', poiIndex: 0, label: 'Congress Southbound', offsetNorthM: -165, offsetEastM: 40, headingDeg: 12, fovDeg: 74, rangeM: 760, elevationM: 24 },
   { id: 'austin-downtown-west', cityId: 'austin', poiIndex: 1, label: 'Downtown West', offsetNorthM: -120, offsetEastM: -160, headingDeg: 120, fovDeg: 69, rangeM: 700, elevationM: 20 },
+
+  // --- Personal Edition: Tehran traffic cams (simulated positions based on real intersections) ---
+  { id: 'tehran-azadi-w', cityId: 'tehran', poiIndex: 0, label: 'Azadi Square West - میدان آزادی', offsetNorthM: 80, offsetEastM: -120, headingDeg: 95, fovDeg: 72, rangeM: 850, elevationM: 28 },
+  { id: 'tehran-milad-n', cityId: 'tehran', poiIndex: 1, label: 'Milad Tower North', offsetNorthM: 150, offsetEastM: 30, headingDeg: 180, fovDeg: 70, rangeM: 900, elevationM: 32 },
+  { id: 'tehran-valiasr-s', cityId: 'tehran', poiIndex: 4, label: 'Valiasr Square South', offsetNorthM: -100, offsetEastM: 60, headingDeg: 10, fovDeg: 68, rangeM: 750, elevationM: 24 },
+  { id: 'tehran-bazaar-e', cityId: 'tehran', poiIndex: 3, label: 'Tehran Bazaar East', offsetNorthM: 60, offsetEastM: 110, headingDeg: 270, fovDeg: 66, rangeM: 680, elevationM: 22 },
+  { id: 'tehran-vanaka', cityId: 'tehran', poiIndex: 4, label: 'Vanak Square - میدان ونک', offsetNorthM: 200, offsetEastM: -80, headingDeg: 135, fovDeg: 74, rangeM: 800, elevationM: 26 },
+
+  // Kurdistan Region cams
+  { id: 'erbil-citadel-n', cityId: 'erbil', poiIndex: 0, label: 'Erbil Citadel North - قەڵا', offsetNorthM: 130, offsetEastM: 20, headingDeg: 185, fovDeg: 70, rangeM: 720, elevationM: 30 },
+  { id: 'erbil-airport-e', cityId: 'erbil', poiIndex: 1, label: 'Erbil Airport East', offsetNorthM: 40, offsetEastM: 150, headingDeg: 270, fovDeg: 68, rangeM: 800, elevationM: 26 },
+  { id: 'erbil-60m-st', cityId: 'erbil', poiIndex: 2, label: '60m Street - شەقامی 60م', offsetNorthM: -90, offsetEastM: 80, headingDeg: 45, fovDeg: 72, rangeM: 780, elevationM: 24 },
+  { id: 'slemani-salem-st', cityId: 'slemani', poiIndex: 0, label: 'Salem Street - شەقامی سالم', offsetNorthM: 70, offsetEastM: 90, headingDeg: 210, fovDeg: 70, rangeM: 700, elevationM: 22 },
+  { id: 'slemani-airport-w', cityId: 'slemani', poiIndex: 1, label: 'Slemani Airport West', offsetNorthM: 60, offsetEastM: -130, headingDeg: 95, fovDeg: 68, rangeM: 760, elevationM: 24 },
+  { id: 'duhok-zawa', cityId: 'duhok', poiIndex: 1, label: 'Zawa Mountain View', offsetNorthM: 180, offsetEastM: -50, headingDeg: 170, fovDeg: 78, rangeM: 950, elevationM: 35 },
+  { id: 'isfahan-naghsh', cityId: 'isfahan', poiIndex: 0, label: 'Naqsh-e Jahan South', offsetNorthM: -80, offsetEastM: 30, headingDeg: 5, fovDeg: 72, rangeM: 680, elevationM: 22 },
+  { id: 'tabriz-bazaar-n', cityId: 'tabriz', poiIndex: 0, label: 'Tabriz Bazaar North', offsetNorthM: 110, offsetEastM: -20, headingDeg: 185, fovDeg: 68, rangeM: 650, elevationM: 20 },
+  { id: 'baghdad-green-zone', cityId: 'baghdad', poiIndex: 0, label: 'Baghdad Green Zone Gate', offsetNorthM: 90, offsetEastM: 70, headingDeg: 220, fovDeg: 70, rangeM: 750, elevationM: 24 },
+  { id: 'istanbul-bosphorus', cityId: 'istanbul', poiIndex: 2, label: 'Bosphorus Bridge View', offsetNorthM: 120, offsetEastM: -60, headingDeg: 135, fovDeg: 76, rangeM: 900, elevationM: 30 },
 ];
 
 // ---------------------------------------------------------------------------
