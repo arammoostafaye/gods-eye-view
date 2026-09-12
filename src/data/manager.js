@@ -1,4 +1,5 @@
 import { governorRequestRender } from '../renderGovernor.js';
+import { translateLayerName, addLanguageChangeListener } from '../i18n/index.js';
 import { markDetectionSourcesChanged } from './detection.js';
 function cloneLayerParams(value) {
   if (Array.isArray(value)) return value.map(cloneLayerParams);
@@ -2016,6 +2017,11 @@ export class DataLayerManager {
   buildTogglePanel(container) {
     this._toggleContainer = container;
     this._renderToggles();
+    if (!this._languageListener) {
+      this._languageListener = addLanguageChangeListener(() => {
+        this._renderToggles();
+      });
+    }
   }
 
   _renderToggles() {
@@ -2033,7 +2039,8 @@ export class DataLayerManager {
 
       const left = document.createElement('div');
       left.className = 'data-toggle-left';
-      left.innerHTML = `<span class="data-icon">${layer.icon}</span><span class="data-name">${layer.name}</span>`;
+      const translatedName = translateLayerName(layer.id, layer.name);
+      left.innerHTML = `<span class="data-icon">${layer.icon}</span><span class="data-name" data-layer-name="${layer.id}">${translatedName}</span>`;
 
       const right = document.createElement('div');
       right.className = 'data-toggle-right';

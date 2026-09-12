@@ -2,19 +2,43 @@
   "app": {
     "title": "God's Eye View",
     "subtitle": "NO PLACE LEFT BEHIND",
-    "tagline": "A spy satellite simulator in your browser - except the data is real"
+    "tagline": "A spy satellite simulator in your browser - except the data is real",
+    "personalEdition": "Personal Edition V2.4"
   },
   "layers": {
     "aircraft": "Aircraft",
+    "militaryFlights": "Military Flights",
     "vessels": "Vessels",
+    "liveAisVessels": "Live AIS Vessels",
     "satellites": "Satellites",
-    "earthquakes": "Earthquakes",
+    "earthquakes": "Earthquakes (24h)",
     "traffic": "Traffic",
     "cctv": "Cameras",
     "weather": "Weather",
     "fire": "Fires",
     "bikeshare": "Bikeshare",
-    "radio": "Radio"
+    "radio": "Radio",
+    "rocketLaunches": "Rocket Launches",
+    "militaryInstallations": "Mapped Installations",
+    "militaryAwareness": "Military Awareness",
+    "countryIntel": "Country Intelligence",
+    "datacenters": "Datacenters",
+    "dams": "Dams",
+    "cables": "Submarine Cables"
+  },
+  "panels": {
+    "dataLayers": "DATA LAYERS",
+    "scenes": "SCENES",
+    "display": "DISPLAY",
+    "cctv": "CCTV",
+    "context": "CONTEXT",
+    "visualPresets": "VISUAL PRESETS",
+    "location": "LOCATION",
+    "globalFlightsRadar": "Global Flights Radar",
+    "orbitalWatch": "Orbital Watch",
+    "thermalThreatBoard": "Thermal Threat Board",
+    "cityOverload": "City Overload",
+    "omnisciencePullback": "Omniscience Pullback"
   },
   "controls": {
     "reset": "Reset Globe",
@@ -23,7 +47,13 @@
     "cockpit": "Cockpit View",
     "search": "Search...",
     "powerUp": "POWER UP",
-    "loading": "LOADING LIVE DATA"
+    "loading": "LOADING LIVE DATA",
+    "on": "ON",
+    "off": "OFF",
+    "unavailable": "UNAVAILABLE",
+    "retry": "retry",
+    "justNow": "just now",
+    "never": "never"
   },
   "regions": {
     "kurdistan": "Kurdistan",
@@ -31,17 +61,99 @@
     "slemani": "Slemani",
     "duhok": "Duhok",
     "kirkuk": "Kirkuk",
+    "halabja": "Halabja",
     "tehran": "Tehran",
+    "isfahan": "Isfahan",
+    "tabriz": "Tabriz",
+    "sanandaj": "Sanandaj",
+    "urmia": "Urmia",
+    "shiraz": "Shiraz",
     "iran": "Iran",
     "iraq": "Iraq",
     "turkey": "Turkey",
-    "persianGulf": "Persian Gulf"
+    "syria": "Syria",
+    "persianGulf": "Persian Gulf",
+    "greaterKurdistan": "Greater Kurdistan",
+    "baghdad": "Baghdad",
+    "istanbul": "Istanbul",
+    "zagros": "Zagros Mountains"
   },
   "presets": {
     "title": "Quick Jump",
     "kurdistan": "Kurdistan Region",
     "iran": "Iran",
     "middleEast": "Middle East",
-    "persianGulf": "Persian Gulf & Strait of Hormuz"
+    "persianGulf": "Persian Gulf & Strait of Hormuz",
+    "kurdistanCities": "Kurdistan Cities",
+    "iranCities": "Iran Cities",
+    "middleEastRegions": "Middle East"
+  },
+  "cockpit": {
+    "altitude": "Altitude",
+    "speed": "Speed",
+    "heading": "Heading",
+    "nearby": "Nearby",
+    "localInfo": "Local Info",
+    "news": "Regional News",
+    "position": "Position",
+    "route": "Route"
+  },
+  "countryIntel": {
+    "title": "Country Intelligence",
+    "clickHint": "Click any country for intelligence",
+    "area": "Area",
+    "population": "Population",
+    "birthRate": "Birth Rate",
+    "deathRate": "Death Rate",
+    "growth": "Growth",
+    "officialLanguages": "Official Languages",
+    "localDialects": "Local Dialects",
+    "economy": "Economy",
+    "gdpRank": "GDP Rank",
+    "gdpNominal": "GDP Nominal",
+    "gdpPerCapita": "GDP Per Capita",
+    "currency": "Currency",
+    "currencyVsUSD": "Currency vs USD",
+    "internet": "Internet",
+    "filteringLevel": "Filtering Level",
+    "internetSpeed": "Internet Speed",
+    "vulnerability": "Vulnerability",
+    "outage": "Internet Outage",
+    "ddos": "DDoS Attacks",
+    "phishing": "Phishing",
+    "zeroDay": "Zero-Day",
+    "live": "LIVE",
+    "close": "Close",
+    "flyTo": "Fly To",
+    "showThreats": "Show Threats"
+  },
+  "cyberThreats": {
+    "title": "Cyber Threats",
+    "ddosLive": "DDoS Live",
+    "outage": "Outage",
+    "phishing": "Phishing",
+    "zeroDay": "Zero-Day",
+    "speed": "Speed",
+    "active": "Active",
+    "critical": "Critical",
+    "totalGbps": "Total Gbps",
+    "byCountry": "By Country"
+  },
+  "liveStats": {
+    "system": "System",
+    "ddos": "DDoS",
+    "outages": "Outages",
+    "phishing": "Phishing",
+    "zeroDay": "Zero-Day",
+    "currency": "Currency",
+    "filter": "Filter",
+    "flights": "Flights"
+  },
+  "githubPages": {
+    "title": "GitHub Pages Mode",
+    "working": "Working",
+    "limited": "Limited",
+    "flightsVia": "Flights (via airplanes.live) • Military • Earthquakes • Country Intel • Cyber Threats • Currency LIVE",
+    "needDocker": "Bikeshare, AIS Vessels, CCTV, Traffic need Docker backend - for all layers run docker-compose up"
   }
 }

@@ -2,19 +2,43 @@
   "app": {
     "title": "چشم خدا",
     "subtitle": "هیچ جایی فراموش نشده",
-    "tagline": "شبیه‌ساز ماهواره جاسوسی در مرورگر - اما داده‌ها واقعی هستند"
+    "tagline": "شبیه‌ساز ماهواره جاسوسی در مرورگر - اما داده‌ها واقعی هستند",
+    "personalEdition": "نسخه شخصی V2.4"
   },
   "layers": {
     "aircraft": "هواپیماها",
+    "militaryFlights": "پروازهای نظامی",
     "vessels": "کشتی‌ها",
+    "liveAisVessels": "کشتی‌های زنده AIS",
     "satellites": "ماهواره‌ها",
-    "earthquakes": "زلزله‌ها",
+    "earthquakes": "زلزله‌ها (24 ساعت)",
     "traffic": "ترافیک",
-    "cctv": "دوربین‌ها",
+    "cctv": "دوربین‌های ترافیک",
     "weather": "آب‌وهوا",
-    "fire": "آتش‌سوزی",
+    "fire": "آتش‌سوزی‌ها",
     "bikeshare": "دوچرخه اشتراکی",
-    "radio": "رادیو زنده"
+    "radio": "رادیو زنده",
+    "rocketLaunches": "پرتاب موشک‌ها",
+    "militaryInstallations": "تاسیسات نظامی",
+    "militaryAwareness": "هشدار نظامی",
+    "countryIntel": "اطلاعات کشورها",
+    "datacenters": "دیتاسنترها",
+    "dams": "سدها",
+    "cables": "کابل‌های زیردریایی"
+  },
+  "panels": {
+    "dataLayers": "لایه‌های داده",
+    "scenes": "صحنه‌ها",
+    "display": "نمایش",
+    "cctv": "دوربین مداربسته",
+    "context": "زمینه",
+    "visualPresets": "پیش‌تنظیم‌های بصری",
+    "location": "موقعیت",
+    "globalFlightsRadar": "رادار پروازهای جهانی",
+    "orbitalWatch": "دید مداری",
+    "thermalThreatBoard": "تابلو تهدید حرارتی",
+    "cityOverload": "تراکم شهری",
+    "omnisciencePullback": "دید همه‌جانبه"
   },
   "controls": {
     "reset": "بازگشت به کره زمین",
@@ -23,7 +47,13 @@
     "cockpit": "نمای کابین",
     "search": "جستجو...",
     "powerUp": "روشن کردن",
-    "loading": "در حال بارگذاری داده‌های زنده"
+    "loading": "در حال بارگذاری داده‌های زنده",
+    "on": "روشن",
+    "off": "خاموش",
+    "unavailable": "در دسترس نیست",
+    "retry": "تلاش مجدد",
+    "justNow": "همین الان",
+    "never": "هرگز"
   },
   "regions": {
     "kurdistan": "کردستان",
@@ -31,15 +61,32 @@
     "slemani": "سلیمانی",
     "duhok": "دهوک",
     "kirkuk": "کرکوک",
+    "halabja": "حلبچه",
     "tehran": "تهران",
     "isfahan": "اصفهان",
     "tabriz": "تبریز",
     "sanandaj": "سنندج",
     "urmia": "ارومیه",
+    "shiraz": "شیراز",
     "iran": "ایران",
     "iraq": "عراق",
     "turkey": "ترکیه",
-    "persianGulf": "خلیج فارس"
+    "syria": "سوریه",
+    "persianGulf": "خلیج فارس",
+    "greaterKurdistan": "کردستان بزرگ",
+    "baghdad": "بغداد",
+    "istanbul": "استانبول",
+    "zagros": "کوه‌های زاگرس"
+  },
+  "presets": {
+    "title": "پرش سریع",
+    "kurdistan": "اقلیم کردستان",
+    "iran": "ایران",
+    "middleEast": "خاورمیانه",
+    "persianGulf": "خلیج فارس و تنگه هرمز",
+    "kurdistanCities": "شهرهای کردستان",
+    "iranCities": "شهرهای ایران",
+    "middleEastRegions": "مناطق خاورمیانه"
   },
   "cockpit": {
     "altitude": "ارتفاع",
@@ -47,13 +94,66 @@
     "heading": "جهت",
     "nearby": "اطراف",
     "localInfo": "اطلاعات محلی",
-    "news": "اخبار منطقه"
+    "news": "اخبار منطقه",
+    "position": "موقعیت",
+    "route": "مسیر"
   },
-  "presets": {
-    "title": "پرش سریع به",
-    "kurdistan": "اقلیم کردستان",
-    "iran": "ایران",
-    "middleEast": "خاورمیانه",
-    "persianGulf": "خلیج فارس و تنگه هرمز"
+  "countryIntel": {
+    "title": "اطلاعات کشور",
+    "clickHint": "روی هر کشور کلیک کنید تا اطلاعات ببینید",
+    "area": "مساحت",
+    "population": "جمعیت",
+    "birthRate": "نرخ تولد",
+    "deathRate": "نرخ مرگ",
+    "growth": "رشد جمعیت",
+    "officialLanguages": "زبان‌های رسمی",
+    "localDialects": "گویش‌های محلی",
+    "economy": "اقتصاد",
+    "gdpRank": "رتبه GDP",
+    "gdpNominal": "GDP اسمی",
+    "gdpPerCapita": "GDP سرانه",
+    "currency": "واحد پول",
+    "currencyVsUSD": "نرخ ارز به دلار",
+    "internet": "اینترنت",
+    "filteringLevel": "سطح فیلترینگ",
+    "internetSpeed": "سرعت اینترنت",
+    "vulnerability": "آسیب‌پذیری",
+    "outage": "قطعی اینترنت",
+    "ddos": "حملات دیداس",
+    "phishing": "فیشینگ",
+    "zeroDay": "زیرو-دی",
+    "live": "زنده",
+    "close": "بستن",
+    "flyTo": "پرواز به",
+    "showThreats": "نمایش تهدیدها"
+  },
+  "cyberThreats": {
+    "title": "تهدیدات سایبری",
+    "ddosLive": "دیداس زنده",
+    "outage": "قطعی",
+    "phishing": "فیشینگ",
+    "zeroDay": "زیرو-دی",
+    "speed": "سرعت",
+    "active": "فعال",
+    "critical": "بحرانی",
+    "totalGbps": "مجموع گیگابیت",
+    "byCountry": "بر اساس کشور"
+  },
+  "liveStats": {
+    "system": "سیستم",
+    "ddos": "دیداس",
+    "outages": "قطعی‌ها",
+    "phishing": "فیشینگ",
+    "zeroDay": "زیرو-دی",
+    "currency": "ارز",
+    "filter": "فیلتر",
+    "flights": "پروازها"
+  },
+  "githubPages": {
+    "title": "حالت گیتهاب پیجز",
+    "working": "فعال",
+    "limited": "محدود",
+    "flightsVia": "پروازها (از طریق airplanes.live) • نظامی • زلزله • اطلاعات کشور • تهدیدات سایبری • ارز زنده",
+    "needDocker": "دوچرخه، کشتی، دوربین، ترافیک نیاز به بک‌اند Docker دارند - برای همه لایه‌ها docker-compose up کنید"
   }
 }

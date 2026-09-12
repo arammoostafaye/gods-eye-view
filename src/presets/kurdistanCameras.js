@@ -3,7 +3,15 @@
  * Integrates with Cesium viewer
  */
 import * as Cesium from 'cesium';
+import { getCurrentLang } from '../i18n/index.js';
 import { ALL_PRESETS, getPresetById } from '../data/regions/kurdistan.js';
+
+function getLocalizedName(preset) {
+  const lang = getCurrentLang();
+  if (lang === 'fa' && preset.name.fa) return preset.name.fa;
+  if (lang === 'ku' && preset.name.ku) return preset.name.ku;
+  return preset.name.en;
+}
 
 export function createKurdistanPresetsUI(viewer) {
   // Create container
@@ -110,7 +118,7 @@ export function createKurdistanPresetsUI(viewer) {
   ALL_PRESETS.forEach(preset => {
     const btn = document.createElement('button');
     btn.className = 'preset-btn';
-    btn.innerHTML = `<span class="icon">${preset.icon || '📍'}</span><span class="name">${preset.name.en}</span>`;
+    btn.innerHTML = `<span class="icon">${preset.icon || '📍'}</span><span class="name">${getLocalizedName(preset)}</span>`;
     btn.title = preset.description?.en || preset.name.en;
     btn.onclick = () => flyToPreset(viewer, preset);
 
