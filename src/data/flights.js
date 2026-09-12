@@ -274,6 +274,33 @@ const _billboardLimbScale = new WeakMap();
 /** @constant {string} API_URL - Vite proxy endpoint for OpenSky /states/all */
 const API_URL = '/api/opensky';
 const SOURCE_STALE_MS = 120_000;
+
+function generateMockFlightsForGitHubPages() {
+  const now = Math.floor(Date.now() / 1000);
+  const mockStates = [];
+  const regions = [
+    { lat: 35.6892, lon: 51.3890, country: 'Iran', count: 8 },
+    { lat: 36.1911, lon: 44.0090, country: 'Iraq', count: 5 },
+    { lat: 41.0082, lon: 28.9784, country: 'Turkey', count: 12 },
+    { lat: 33.3152, lon: 44.3661, country: 'Iraq', count: 4 },
+    { lat: 25.2048, lon: 55.2708, country: 'UAE', count: 15 },
+  ];
+  let icaoCounter = 0xA00000;
+  regions.forEach(region => {
+    for (let i = 0; i < region.count; i++) {
+      const icao24 = (icaoCounter++).toString(16).padStart(6, '0');
+      const lat = region.lat + (Math.random() - 0.5) * 4;
+      const lon = region.lon + (Math.random() - 0.5) * 4;
+      const alt = 8000 + Math.random() * 8000;
+      const velocity = 200 + Math.random() * 300;
+      const track = Math.random() * 360;
+      const callsign = `${['THY','IRA','UAE','QTR','KLM','BAW'][Math.floor(Math.random()*6)]}${Math.floor(100+Math.random()*900)}`;
+      mockStates.push([icao24, callsign, region.country, now - Math.floor(Math.random()*60), now, lon, lat, alt, false, velocity, track, 0, null, alt+100, null, false, 0, 0]);
+    }
+  });
+  return { time: now, states: mockStates };
+}
+
 /** @constant {number} BACKOFF_INTERVAL - Cooldown (ms) after 429 / auth errors */
 const BACKOFF_INTERVAL = 45000; // 45s on rate limit
 /** @constant {number} ERROR_BACKOFF_INTERVAL - Cooldown (ms) after transient errors */
@@ -4156,6 +4183,27 @@ const flightsLayer = {
 
       if (!response.ok) {
         console.warn(`[Data:Flights] API returned ${response.status}`);
+        
+        // On GitHub Pages, use mock data for demo
+        if (typeof isGitHubPages === 'function' && isGitHubPages() && (response.status === 404 || response.status === 403)) {
+          console.log('[Data:Flights] GitHub Pages - using mock flights');
+          try {
+            const mockData = generateMockFlightsForGitHubPages();
+            _lastSource = 'GitHub Pages Mock (Middle East 50 aircraft)';
+            _lastCoverage = 'Simulated - Run docker-compose up for real live data';
+            _lastStatus = 200;
+            _backoff = false;
+            _retryAt = 0;
+            _lastError = null;
+            _count = mockData.states.length;
+            _lastUpdate = Date.now();
+            window.dispatchEvent(new CustomEvent('gev:flight-count', { detail: { count: _count } }));
+            return;
+          } catch (e) {
+            console.log('Mock failed:', e);
+          }
+        }
+        
         _backoff = true;
         _retryAt = nowMs + ERROR_BACKOFF_INTERVAL;
         let detail = '';
@@ -4167,6 +4215,10 @@ const flightsLayer = {
           detail = '';
         }
         _lastError = detail || `OpenSky HTTP ${response.status}`;
+        if (typeof isGitHubPages === 'function' && isGitHubPages()) {
+          if (response.status === 404) _lastError = 'GitHub Pages: No backend - Mock active (docker-compose up for real)';
+          if (response.status === 403) _lastError = 'GitHub Pages: API blocked (403) - Mock active';
+        }
         return;
       }
 
