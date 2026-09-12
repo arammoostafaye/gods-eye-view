@@ -47,7 +47,7 @@ export function createStandaloneData({
   dataManager.register(militaryInstallationsLayer);
   dataManager.register(militaryAwarenessLayer);
   militaryAwarenessLayer.attachDataManager(dataManager);
-  dataManager.register(country - intelligenceLayer);
+  dataManager.register(countryIntelligenceLayer);
   for (const layer of localDataLayers) {
     dataManager.register(layer);
   }
