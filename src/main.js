@@ -4,7 +4,9 @@ import { initI18n } from './i18n/index.js';
 
 // Personal Edition - Init i18n (ku/fa/en) before app start
 const detectedLang = initI18n();
-console.log(`🌐 God's Eye View - Personal Edition | Lang: ${detectedLang} | Kurdistan & Iran Focus`);
+console.log(
+  `🌐 God's Eye View - Personal Edition | Lang: ${detectedLang} | Kurdistan & Iran Focus`,
+);
 
 const application = createStandaloneApplication({
   googleApiKey: import.meta.env.GOOGLE_MAPS_API_KEY,
