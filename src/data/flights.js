@@ -20,6 +20,8 @@
  * looking at (owner decision 2026-07-02).
  */
 import * as Cesium from 'cesium';
+import { normalizeAdsbLolPointResponse } from './adsbLolFallback.js';
+import { fetchFlightsWithFallback, isGitHubPages } from './publicFlightFallback.js';
 import { aircraftIncludedInNearby } from './aircraftNearbyPolicy.js';
 import { registerPickOwner, unregisterPickOwner, isOwnedByOtherLayer, resolvePickId } from './pickRegistry.js';
 import {
@@ -4076,7 +4078,44 @@ const flightsLayer = {
       : resourceController.signal;
     try {
       updateSignal.throwIfAborted();
-      const response = await fetch(_flightApiUrl(viewer || _viewer), { signal: updateSignal });
+      let response;
+      let isAdsbLolFallback = false;
+      let fallbackSource = null;
+      try {
+        const primaryUrl = _flightApiUrl(viewer || _viewer);
+        // Try primary, with GitHub Pages fallback
+        if (isGitHubPages()) {
+          try {
+            const result = await fetchFlightsWithFallback(primaryUrl, viewer || _viewer, { signal: updateSignal });
+            response = result.response;
+            isAdsbLolFallback = result.isAdsbLol;
+            fallbackSource = result.source;
+          } catch (e) {
+            // If fallback also fails, try primary anyway to get proper error handling
+            response = await fetch(primaryUrl, { signal: updateSignal });
+          }
+        } else {
+          response = await fetch(primaryUrl, { signal: updateSignal });
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') throw e;
+        // Network error on GitHub Pages - try direct public API
+        if (isGitHubPages()) {
+          try {
+            const result = await fetchFlightsWithFallback(_flightApiUrl(viewer || _viewer), viewer || _viewer, { signal: updateSignal });
+            response = result.response;
+            isAdsbLolFallback = result.isAdsbLol;
+            fallbackSource = result.source;
+          } catch (e2) {
+            _backoff = true;
+            _retryAt = nowMs + ERROR_BACKOFF_INTERVAL;
+            _lastError = `Network error: ${e.message}`;
+            return;
+          }
+        } else {
+          throw e;
+        }
+      }
       _lastStatus = response.status;
       const responseSource = response.headers.get('x-flight-source');
       const responseCoverage = response.headers.get('x-flight-coverage');
@@ -4131,8 +4170,15 @@ const flightsLayer = {
         return;
       }
 
-      const data = await response.json();
+      let data = await response.json();
       updateSignal.throwIfAborted();
+      // Handle adsb.lol fallback format (ac array) vs OpenSky (states array)
+      if (isAdsbLolFallback && data && Array.isArray(data.ac)) {
+        const converted = normalizeAdsbLolPointResponse(data);
+        data = converted;
+        _lastSource = fallbackSource || 'airplanes.live';
+        _lastCoverage = `public API fallback - ${converted.states.length} aircraft`;
+      }
       if (!data || !Array.isArray(data.states)) {
         _backoff = true;
         _retryAt = nowMs + ERROR_BACKOFF_INTERVAL;

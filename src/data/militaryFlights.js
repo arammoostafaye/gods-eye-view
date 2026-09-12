@@ -1,4 +1,5 @@
 import * as Cesium from 'cesium';
+import { fetchMilitaryWithFallback, isGitHubPages } from './publicFlightFallback.js';
 import { aircraftIncludedInNearby } from './aircraftNearbyPolicy.js';
 import { registerPickOwner, unregisterPickOwner, isOwnedByOtherLayer, resolvePickId } from './pickRegistry.js';
 import { registerSpriteCollection, restoreSpriteOrder } from './spriteOrder.js';
@@ -2785,7 +2786,16 @@ const militaryFlightsLayer = {
       : resourceController.signal;
     try {
       updateSignal.throwIfAborted();
-      const response = await fetch(API_URL, { signal: updateSignal });
+      let response;
+      if (isGitHubPages()) {
+        try {
+          response = await fetchMilitaryWithFallback(API_URL, { signal: updateSignal });
+        } catch (e) {
+          response = await fetch(API_URL, { signal: updateSignal });
+        }
+      } else {
+        response = await fetch(API_URL, { signal: updateSignal });
+      }
       _lastStatus = response.status;
 
       if (!response.ok) {
