@@ -9,6 +9,8 @@
  * - Simulated live stream for demo
  */
 
+import { fetchRealDDoS } from './realDataFetcher.js';
+
 export class DDoSMonitor {
   constructor() {
     this.activeAttacks = [];
@@ -94,12 +96,25 @@ export class DDoSMonitor {
 
   async fetchLiveAttacks() {
     try {
+      // Try backend first
       const res = await fetch('/api/ddos-attacks', { signal: AbortSignal.timeout(5000) }).catch(()=>null);
       if (res && res.ok) {
         const data = await res.json();
-        return data.attacks || this.generateMockAttacks();
+        if (data.attacks) {
+          console.log('[DDoS] Real data from /api/ddos-attacks');
+          return data.attacks;
+        }
       }
-    } catch {}
+      
+      // Try real public API (Cloudflare Radar via proxy)
+      const realData = await fetchRealDDoS().catch(() => null);
+      if (realData && Array.isArray(realData) && realData.length > 0) {
+        console.log('[DDoS] Real data from public API');
+        return realData;
+      }
+    } catch (e) {
+      console.log('[DDoS] Real fetch failed:', e.message);
+    }
     return this.generateMockAttacks();
   }
 

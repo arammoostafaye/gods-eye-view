@@ -9,6 +9,8 @@
  * - Simulated live data for demo
  */
 
+import { fetchRealOutages } from './realDataFetcher.js';
+
 export const OUTAGE_SOURCES = {
   CLOUDFLARE_RADAR: 'https://api.cloudflare.com/client/v4/radar',
   IODA: 'https://api.ioda.inetintel.cc.gatech.edu/v2',
@@ -117,16 +119,27 @@ export class InternetOutageMonitor {
   }
 
   async fetchLiveOutages() {
-    // Try real APIs, fallback to mock
+    // Try real APIs first (works on GitHub Pages via CORS proxies)
     try {
-      // Cloudflare Radar outage center - requires API key, so we simulate
-      // In production, you'd proxy via server: /api/internet-outages
+      // Try backend proxy first
       const response = await fetch('/api/internet-outages', { signal: AbortSignal.timeout(5000) }).catch(() => null);
       if (response && response.ok) {
         const data = await response.json();
-        return data.outages || this.generateMockOutages();
+        if (data.outages) {
+          console.log('[Outage] Real data from /api/internet-outages');
+          return data.outages;
+        }
       }
-    } catch {}
+      
+      // Try real public APIs (IODA, Cloudflare Radar via proxy)
+      const realData = await fetchRealOutages().catch(() => null);
+      if (realData && realData.length > 0) {
+        console.log('[Outage] Real data from public API');
+        return realData;
+      }
+    } catch (e) {
+      console.log('[Outage] Real fetch failed, using mock:', e.message);
+    }
     
     return this.generateMockOutages();
   }
