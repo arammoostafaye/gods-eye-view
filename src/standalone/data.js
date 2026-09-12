@@ -12,7 +12,7 @@ import aisLiveVesselsLayer from '../data/aisLiveVessels.js';
 import militaryInstallationsLayer from '../data/militaryInstallations.js';
 import militaryAwarenessLayer from '../data/militaryAwareness.js';
 import localDataLayers from '../data/localLayers.js';
-import countryIntelligenceLayer from '../data/countryIntelligenceLayer.js';
+import country-intelligenceLayer from '../data/country-intelligenceLayer.js';
 import { LAYER_STATE_REGISTRY } from '../data/layerState.js';
 
 /** Register the standalone layer catalog before allowing state restoration. */
@@ -47,7 +47,7 @@ export function createStandaloneData({
   dataManager.register(militaryInstallationsLayer);
   dataManager.register(militaryAwarenessLayer);
   militaryAwarenessLayer.attachDataManager(dataManager);
-  dataManager.register(countryIntelligenceLayer);
+  dataManager.register(country-intelligenceLayer);
   for (const layer of localDataLayers) {
     dataManager.register(layer);
   }

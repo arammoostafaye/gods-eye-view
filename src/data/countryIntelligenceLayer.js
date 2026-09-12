@@ -111,7 +111,7 @@ function removeClickHandler() {
 }
 
 const countryIntelligenceLayer = {
-  id: 'countryIntel',
+  id: 'country-intel',
   name: 'Country Intelligence',
   icon: '🌍',
   source: 'World Bank, REST Countries, Cloudflare Radar, NetBlocks, Abuse.ch, CISA',
