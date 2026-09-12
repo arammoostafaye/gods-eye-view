@@ -122,8 +122,8 @@ export function createCountryIntelToolbar(viewer) {
               detail: { mode: action }
             }));
             // Directly trigger threat map if available
-            if (window.__country-intelLayer) {
-              window.__country-intelLayer.showThreatMap(action);
+            if (window.__countryIntelLayer) {
+              window.__countryIntelLayer.showThreatMap(action);
             } else {
               // Fallback: dispatch event that country-intel layer listens to
               const event = new CustomEvent('gev:show-cyber-threats', { detail: { country: null } });
@@ -143,8 +143,8 @@ export function createCountryIntelToolbar(viewer) {
             // Hide threat map
             const threatMapEl = document.getElementById('cyber-threat-control');
             if (threatMapEl) threatMapEl.classList.remove('active');
-            if (window.__country-intelLayer?.getCyberThreatMap) {
-              window.__country-intelLayer.getCyberThreatMap()?.hide();
+            if (window.__countryIntelLayer?.getCyberThreatMap) {
+              window.__countryIntelLayer.getCyberThreatMap()?.hide();
             }
           }
           break;
@@ -175,8 +175,8 @@ export function createCountryIntelToolbar(viewer) {
         case 'dashboard':
           // Will be handled by layer, but also dispatch
           window.dispatchEvent(new CustomEvent('gev:show-dashboard'));
-          if (window.__country-intelLayer?.showDashboard) {
-            window.__country-intelLayer.showDashboard();
+          if (window.__countryIntelLayer?.showDashboard) {
+            window.__countryIntelLayer.showDashboard();
           }
           break;
       }
@@ -185,7 +185,7 @@ export function createCountryIntelToolbar(viewer) {
 
   // Make country intel layer globally accessible for toolbar
   window.addEventListener('gev:country-intel-ready', (e) => {
-    window.__country-intelLayer = e.detail.layer;
+    window.__countryIntelLayer = e.detail.layer;
   });
 
   return toolbar;
