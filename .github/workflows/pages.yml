@@ -37,6 +37,25 @@ jobs:
           VITE_BASE: /gods-eye-view/
           GITHUB_ACTIONS: true
 
+      - name: Fix Cesium assets path for GitHub Pages
+        run: |
+          echo "Before fix:"
+          ls -la dist/ | head -20
+          ls -la dist/gods-eye-view/ 2>&1 | head -20
+          # vite-plugin-cesium bug: with base=/gods-eye-view/, it copies to dist/gods-eye-view/cesium/ instead of dist/cesium/
+          # But GitHub Pages serves dist/ at /gods-eye-view/, so we need dist/cesium/ to be served at /gods-eye-view/cesium/
+          if [ -d "dist/gods-eye-view/cesium" ]; then
+            echo "Fixing nested cesium path..."
+            mv dist/gods-eye-view/cesium dist/cesium
+            rmdir dist/gods-eye-view 2>&1 || rm -rf dist/gods-eye-view
+            echo "After fix:"
+            ls -la dist/ | head -20
+            ls -la dist/cesium/ | head -10
+          else
+            echo "No nested path found, checking dist/cesium/"
+            ls -la dist/cesium/ 2>&1 | head -10
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
