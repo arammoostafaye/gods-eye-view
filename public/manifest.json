@@ -1,0 +1,58 @@
+{
+  "name": "God's Eye View - Personal Edition",
+  "short_name": "God's Eye",
+  "description": "Spy satellite simulator - Live aircraft, ships, satellites on 3D globe. Kurdistan & Iran focus.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff2a2a",
+  "orientation": "any",
+  "categories": ["navigation", "utilities", "travel"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-alt.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Erbil - هەولێر",
+      "short_name": "Erbil",
+      "description": "Jump to Erbil, capital of Kurdistan",
+      "url": "/?preset=erbil",
+      "icons": [{ "src": "/logo.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Tehran - تهران",
+      "short_name": "Tehran",
+      "description": "Jump to Tehran",
+      "url": "/?preset=tehran",
+      "icons": [{ "src": "/logo.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Persian Gulf",
+      "short_name": "Gulf",
+      "description": "Persian Gulf & Strait of Hormuz",
+      "url": "/?preset=persian-gulf",
+      "icons": [{ "src": "/logo.svg", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/banner.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "app": {
+    "title": "God's Eye View",
+    "subtitle": "NO PLACE LEFT BEHIND",
+    "tagline": "A spy satellite simulator in your browser - except the data is real"
+  },
+  "layers": {
+    "aircraft": "Aircraft",
+    "vessels": "Vessels",
+    "satellites": "Satellites",
+    "earthquakes": "Earthquakes",
+    "traffic": "Traffic",
+    "cctv": "Cameras",
+    "weather": "Weather",
+    "fire": "Fires",
+    "bikeshare": "Bikeshare",
+    "radio": "Radio"
+  },
+  "controls": {
+    "reset": "Reset Globe",
+    "share": "Share Link",
+    "clearLayers": "Clear Layers",
+    "cockpit": "Cockpit View",
+    "search": "Search...",
+    "powerUp": "POWER UP",
+    "loading": "LOADING LIVE DATA"
+  },
+  "regions": {
+    "kurdistan": "Kurdistan",
+    "erbil": "Erbil",
+    "slemani": "Slemani",
+    "duhok": "Duhok",
+    "kirkuk": "Kirkuk",
+    "tehran": "Tehran",
+    "iran": "Iran",
+    "iraq": "Iraq",
+    "turkey": "Turkey",
+    "persianGulf": "Persian Gulf"
+  },
+  "presets": {
+    "title": "Quick Jump",
+    "kurdistan": "Kurdistan Region",
+    "iran": "Iran",
+    "middleEast": "Middle East",
+    "persianGulf": "Persian Gulf & Strait of Hormuz"
+  }
+}

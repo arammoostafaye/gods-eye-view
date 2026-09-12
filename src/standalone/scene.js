@@ -7,6 +7,8 @@ import { loadPhotorealisticTileset } from '../mapStartup.js';
 import { initLogoGaze } from '../logoGaze.js';
 import { uninstallRenderGovernor } from '../renderGovernor.js';
 import { describeError } from './errors.js';
+import { createKurdistanPresetsUI } from '../presets/kurdistanCameras.js';
+import { createLanguageSwitcher } from '../presets/languageSwitcher.js';
 
 /** Construct the standalone globe using the caller's local configuration. */
 export async function createStandaloneScene({
@@ -101,5 +103,15 @@ export async function createStandaloneScene({
   });
 
   signal.throwIfAborted();
+
+  // Personal Edition: Add Kurdistan & Iran quick jump presets + Language switcher
+  try {
+    createKurdistanPresetsUI(viewer);
+    createLanguageSwitcher();
+    console.log('☀️ Kurdistan presets + i18n loaded');
+  } catch (e) {
+    console.warn('Personal Edition UI failed:', e);
+  }
+
   return { viewer, tileset, mapStackController };
 }

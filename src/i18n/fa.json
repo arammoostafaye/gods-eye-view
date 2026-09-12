@@ -1,0 +1,59 @@
+{
+  "app": {
+    "title": "چشم خدا",
+    "subtitle": "هیچ جایی فراموش نشده",
+    "tagline": "شبیه‌ساز ماهواره جاسوسی در مرورگر - اما داده‌ها واقعی هستند"
+  },
+  "layers": {
+    "aircraft": "هواپیماها",
+    "vessels": "کشتی‌ها",
+    "satellites": "ماهواره‌ها",
+    "earthquakes": "زلزله‌ها",
+    "traffic": "ترافیک",
+    "cctv": "دوربین‌ها",
+    "weather": "آب‌وهوا",
+    "fire": "آتش‌سوزی",
+    "bikeshare": "دوچرخه اشتراکی",
+    "radio": "رادیو زنده"
+  },
+  "controls": {
+    "reset": "بازگشت به کره زمین",
+    "share": "اشتراک لینک",
+    "clearLayers": "پاک کردن لایه‌ها",
+    "cockpit": "نمای کابین",
+    "search": "جستجو...",
+    "powerUp": "روشن کردن",
+    "loading": "در حال بارگذاری داده‌های زنده"
+  },
+  "regions": {
+    "kurdistan": "کردستان",
+    "erbil": "اربیل",
+    "slemani": "سلیمانی",
+    "duhok": "دهوک",
+    "kirkuk": "کرکوک",
+    "tehran": "تهران",
+    "isfahan": "اصفهان",
+    "tabriz": "تبریز",
+    "sanandaj": "سنندج",
+    "urmia": "ارومیه",
+    "iran": "ایران",
+    "iraq": "عراق",
+    "turkey": "ترکیه",
+    "persianGulf": "خلیج فارس"
+  },
+  "cockpit": {
+    "altitude": "ارتفاع",
+    "speed": "سرعت",
+    "heading": "جهت",
+    "nearby": "اطراف",
+    "localInfo": "اطلاعات محلی",
+    "news": "اخبار منطقه"
+  },
+  "presets": {
+    "title": "پرش سریع به",
+    "kurdistan": "اقلیم کردستان",
+    "iran": "ایران",
+    "middleEast": "خاورمیانه",
+    "persianGulf": "خلیج فارس و تنگه هرمز"
+  }
+}
