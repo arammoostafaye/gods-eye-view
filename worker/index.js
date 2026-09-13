@@ -13,9 +13,11 @@
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, HEAD',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Access-Control-Max-Age': '86400',
+  'Cross-Origin-Resource-Policy': 'cross-origin',
+  'Cross-Origin-Embedder-Policy': 'unsafe-none',
 };
 
 // Cache for 10-30 seconds to avoid rate limits
@@ -199,40 +201,23 @@ function getCctvSeedSources() {
 }
 
 function generateCctvPlaceholderSvg(cameraId, label, city) {
-  const hue = Math.abs(hashString(cameraId)) % 360;
-  const hue2 = (hue + 46) % 360;
   const now = new Date().toISOString().slice(0, 19) + 'Z';
-  const safeLabel = label.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-  const safeCity = city.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-  const safeId = cameraId.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-  
-  return `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"960\" height=\"540\" viewBox=\"0 0 960 540\">
-  <defs>
-    <linearGradient id=\"bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">
-      <stop offset=\"0%\" stop-color=\"hsl(${hue}, 35%, 10%)\" />
-      <stop offset=\"60%\" stop-color=\"hsl(${hue2}, 42%, 6%)\" />
-      <stop offset=\"100%\" stop-color=\"#020509\" />
-    </linearGradient>
-    <pattern id=\"scan\" width=\"8\" height=\"8\" patternUnits=\"userSpaceOnUse\">
-      <rect width=\"8\" height=\"8\" fill=\"transparent\" />
-      <rect y=\"0\" width=\"8\" height=\"1\" fill=\"rgba(255,255,255,0.08)\" />
-      <rect y=\"4\" width=\"8\" height=\"1\" fill=\"rgba(255,255,255,0.05)\" />
-    </pattern>
-  </defs>
-  <rect width=\"960\" height=\"540\" fill=\"url(#bg)\" />
-  <rect width=\"960\" height=\"540\" fill=\"url(#scan)\" />
-  <g fill=\"none\" stroke=\"rgba(180,248,255,0.2)\" stroke-width=\"1\">
-    <rect x=\"70\" y=\"80\" width=\"820\" height=\"380\" rx=\"8\" />
-    <line x1=\"70\" y1=\"270\" x2=\"890\" y2=\"270\" />
-    <line x1=\"480\" y1=\"80\" x2=\"480\" y2=\"460\" />
-  </g>
-  <g fill=\"#9cefff\" font-family=\"monospace\" text-transform=\"uppercase\">
-    <text x=\"74\" y=\"54\" font-size=\"16\" letter-spacing=\"2\">CCTV LIVE - GITHUB PAGES</text>
-    <text x=\"74\" y=\"512\" font-size=\"14\" letter-spacing=\"1.5\">${safeLabel} · ${safeCity}</text>
-    <text x=\"74\" y=\"486\" font-size=\"13\" letter-spacing=\"1.3\">${safeId} · PLACEHOLDER FRAME</text>
-    <text x=\"704\" y=\"54\" font-size=\"12\">${now}</text>
-    <text x=\"74\" y=\"100\" font-size=\"12\" fill=\"rgba(255,255,255,0.5)\">GitHub Pages - Seed catalog, no live upstream</text>
-  </g>
+  const esc = (s) => String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const safeLabel = esc(label).slice(0, 80);
+  const safeCity = esc(city).slice(0, 40);
+  const safeId = esc(cameraId).slice(0, 60);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <rect width="960" height="540" fill="#0a1420"/>
+  <rect x="20" y="20" width="920" height="500" fill="none" stroke="#4ecde7" stroke-width="2" opacity="0.3" rx="8"/>
+  <rect x="40" y="40" width="880" height="460" fill="none" stroke="#4ecde7" stroke-width="1" opacity="0.15" rx="4"/>
+  <line x1="40" y1="270" x2="920" y2="270" stroke="#4ecde7" stroke-width="1" opacity="0.1"/>
+  <line x1="480" y1="40" x2="480" y2="500" stroke="#4ecde7" stroke-width="1" opacity="0.1"/>
+  <text x="50" y="50" font-family="monospace" font-size="16" fill="#9cefff">CCTV LIVE - GITHUB PAGES - ${now}</text>
+  <text x="50" y="490" font-family="monospace" font-size="18" fill="#ffd97a" font-weight="bold">${safeLabel}</text>
+  <text x="50" y="465" font-family="monospace" font-size="14" fill="#6be8ff">${safeCity} - ${safeId}</text>
+  <text x="50" y="80" font-family="monospace" font-size="12" fill="#ffffff" opacity="0.6">Seed catalog - Worker placeholder - Real cameras need Docker</text>
+  <circle cx="480" cy="270" r="40" fill="none" stroke="#ff6b6b" stroke-width="2" opacity="0.4"/>
+  <circle cx="480" cy="270" r="4" fill="#ff6b6b" opacity="0.8"/>
 </svg>`;
 }
 
@@ -884,7 +869,7 @@ export default {
       
       return new Response(svg, {
         status: 200,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'image/svg+xml', 'Cache-Control': 'no-store', 'X-CCTV-Source': 'synthetic' },
+        headers: { ...CORS_HEADERS, 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=10', 'X-CCTV-Source': 'synthetic', 'Cross-Origin-Resource-Policy': 'cross-origin' },
       });
     }
 

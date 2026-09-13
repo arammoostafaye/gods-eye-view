@@ -3128,6 +3128,7 @@ function fetchCardFrame(record, slot, refreshMs, { userGesture = false } = {}) {
   _cardFetchCount += 1;
 
   const image = new Image();
+  image.crossOrigin = 'anonymous';
   _cardFetchImages.add(image);
   const settle = (ok) => {
     image.onload = null;

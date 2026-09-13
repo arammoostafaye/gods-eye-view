@@ -6480,9 +6480,13 @@ export class StyleManager {
     );
 
     const preloader = new Image();
+    preloader.crossOrigin = 'anonymous';
     this._cctvFramePreloader = preloader;
     preloader.onload = () => this._settleCctvFrame(token, src, true);
-    preloader.onerror = () => this._settleCctvFrame(token, src, false);
+    preloader.onerror = () => {
+      console.warn('[CCTV] Frame failed to load:', src);
+      this._settleCctvFrame(token, src, false);
+    };
     preloader.src = src;
   }
 
