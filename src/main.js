@@ -1,3 +1,4 @@
+import './config/githubPagesInterceptor.js';
 import { createStandaloneApplication } from './standalone/application.js';
 import { describeError } from './standalone/errors.js';
 import { initI18n } from './i18n/index.js';
