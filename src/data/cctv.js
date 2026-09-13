@@ -101,12 +101,22 @@ import {
 import { holdContinuousRender, releaseContinuousRender } from '../renderGovernor.js';
 
 // ---------------------------------------------------------------------------
-// API endpoints
+// API endpoints - use Worker proxy on GitHub Pages
 // ---------------------------------------------------------------------------
+import { getApiUrl } from '../config/proxy.js';
+
 const FRAME_ENDPOINT = '/api/cctv/frame';
 const SOURCE_ENDPOINT = '/api/cctv/sources';
 const HEALTH_ENDPOINT = '/api/cctv/health';
 const MEDIA_ENDPOINT = '/api/cctv/media';
+
+function cctvApi(path) {
+  try {
+    return getApiUrl(path);
+  } catch {
+    return path;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Timing and geometry constants
@@ -1112,7 +1122,7 @@ function cityIdByName(cityName) {
  */
 async function loadCameraSources() {
   try {
-    const resp = await fetch(SOURCE_ENDPOINT, { cache: 'no-store' });
+    const resp = await fetch(cctvApi(SOURCE_ENDPOINT), { cache: 'no-store' });
     if (!resp.ok) return [];
     const data = await resp.json();
     if (!Array.isArray(data?.sources)) return [];
@@ -1489,6 +1499,7 @@ function refreshProjectionTextures(record) {
 /**
  * Builds the URL for fetching a camera frame image from the backend.
  * Includes a tick parameter to control cache invalidation cadence.
+ * Uses Worker proxy on GitHub Pages so Image() loading works.
  * @param {Object} camera - Camera object.
  * @param {number} [refreshMs=ACTIVE_FRAME_REFRESH_MS] - Refresh interval used for tick bucketing.
  * @returns {string} Frame URL.
@@ -1506,7 +1517,7 @@ function frameUrlFor(camera, refreshMs = ACTIVE_FRAME_REFRESH_MS) {
     pitch: String(Math.round(camera.pitchDeg || -10)),
     ts: String(tick),
   });
-  return `${FRAME_ENDPOINT}/${encodeURIComponent(camera.id)}?${params.toString()}`;
+  return `${cctvApi(FRAME_ENDPOINT)}/${encodeURIComponent(camera.id)}?${params.toString()}`;
 }
 
 /**
@@ -1515,7 +1526,7 @@ function frameUrlFor(camera, refreshMs = ACTIVE_FRAME_REFRESH_MS) {
  * @returns {string} Media URL.
  */
 function mediaUrlFor(camera) {
-  return `${MEDIA_ENDPOINT}/${encodeURIComponent(camera.id)}?ts=${Math.floor(Date.now() / 15000)}`;
+  return `${cctvApi(MEDIA_ENDPOINT)}/${encodeURIComponent(camera.id)}?ts=${Math.floor(Date.now() / 15000)}`;
 }
 
 /**
@@ -4150,7 +4161,7 @@ async function syncHealthState(force = false) {
   _lastHealthSyncAt = now;
 
   try {
-    const resp = await fetch(HEALTH_ENDPOINT, { cache: 'no-store' });
+    const resp = await fetch(cctvApi(HEALTH_ENDPOINT), { cache: 'no-store' });
     if (!resp.ok) return;
     const data = await resp.json();
     const rows = Array.isArray(data?.cameras) ? data.cameras : [];

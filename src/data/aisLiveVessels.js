@@ -48,6 +48,9 @@ import { holdContinuousRender, releaseContinuousRender } from '../renderGovernor
 
 const FOCUS_EVIDENCE_DEV = import.meta.env?.DEV === true;
 
+import { getApiUrl } from '../config/proxy.js';
+function aisApi(path) { try { return getApiUrl(path); } catch { return path; } }
+
 /** Camera pose signature at the last vessel rotation pass. */
 let _lastCamPoseSig = '';
 const _scratchFocusScreen = new Cesium.Cartesian2();
@@ -944,7 +947,8 @@ function applyAisFeedSnapshot(viewer, payload) {
 
 function liveApiUrl() {
   const base = import.meta.env?.VITE_AIS_LIVE_API_URL || DEFAULT_API_URL;
-  const url = new URL(base, window.location.origin);
+  const resolvedBase = aisApi(base);
+  const url = new URL(resolvedBase, window.location.origin);
   url.searchParams.set('maxRows', String(renderRowLimit()));
   return url.toString();
 }
@@ -1654,7 +1658,7 @@ function startSelectedVesselTrail(record) {
 async function backfillVesselTrail(mmsi, token) {
   let samples = null;
   try {
-    const response = await fetch('/api/ais-live/track?mmsi=' + encodeURIComponent(mmsi), {
+    const response = await fetch(aisApi('/api/ais-live/track?mmsi=' + encodeURIComponent(mmsi)), {
       signal: AbortSignal.timeout(8000),
     });
     if (!response.ok) return;

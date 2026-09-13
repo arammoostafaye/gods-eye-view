@@ -35,8 +35,10 @@ import {
 } from '../overlays/worldOverlay.js';
 import { requestWorldFocus } from '../worldFocus.js';
 
-/** Same-origin live-fires proxy (vite.config.js firmsProxy — key stays server-side). */
+/** Same-origin live-fires proxy (vite.config.js firmsProxy — key stays server-side). Uses Worker on GitHub Pages. */
+import { getApiUrl } from '../config/proxy.js';
 const FIRMS_API_URL = '/api/firms';
+function firmsApi() { try { return getApiUrl(FIRMS_API_URL); } catch { return FIRMS_API_URL; } }
 /** Client poll interval; the proxy's 30 min TTL is what guards upstream quota. */
 const REFRESH_INTERVAL_MS = 600_000;
 
@@ -421,7 +423,7 @@ export function createFirmsHeatmapLayer({
     _loading = true;
 
     try {
-      const response = await fetch(FIRMS_API_URL, { cache: 'no-store' });
+      const response = await fetch(firmsApi(), { cache: 'no-store' });
       if (!response.ok) {
         let payload = null;
         try {
